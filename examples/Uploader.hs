@@ -16,7 +16,7 @@ loginUser p = do
   liftIO (putStrLn ("Authorization URL: " ++ u))
   liftIO (putStrLn ("Hit return after user has authorized call"))
   liftIO (hFlush stdout)
-  liftIO getLine
+  _ <- liftIO getLine
   tok <- mkT
   return (u, tok)
 
@@ -45,5 +45,3 @@ main = flick $ do
     _ -> liftIO $ do
       p <- getProgName
       putStrLn ("Usage: " ++ p ++ " [-t mini-token] upload_file title description [tag]*")
-  
-  

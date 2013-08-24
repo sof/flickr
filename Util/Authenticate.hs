@@ -29,9 +29,9 @@ authenticateForWeb forPerm = do
 -- or for the first time around, by having the user write
 -- down the mini-token 9-digit (format is xxx-yyy-zzz) string
 -- and input that to the application through its UI.
--- 
+--
 authenticateForMobile :: String -> FM (Maybe (URLString, String -> FM AuthToken))
-authenticateForMobile perm = do
+authenticateForMobile _perm = do
   x <- getAPIKey
   case apiKind x of
     "mobile" -> do

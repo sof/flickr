@@ -46,18 +46,18 @@ eltAuthToken e = ifNamed "auth" e $ do
                   , authPerms = words p
 		  , authUser = user
 		  }
-		  
+
 toUser :: String -> ErrM User
 toUser s = parseDoc eltUser s
 
 eltUser :: Element -> Maybe User
 eltUser u = do
-  nid   <- pAttr "nsid" u `mplus` pAttr "id" u 
+  nid   <- pAttr "nsid" u `mplus` pAttr "id" u
   uname <- pAttr "username" u `mplus` (fmap strContent $ findChild (nsName "username") u)
   let fname = pAttr "fullname" u `mplus` (fmap strContent $ findChild (nsName "realname") u )
   let pro   = eltBool "ispro" u
   let adm   = eltBool "isadmin" u
-  return 
+  return
      nullUser{ userName     = uname
              , userId       = nid
 	     , userFullName = fname
@@ -78,14 +78,14 @@ toGroup s = parseDoc eltGroup s
 
 eltGroup :: Element -> Maybe Group
 eltGroup u = ifNamed "group" u $ do
-  nid   <- pAttr "nsid" u `mplus` pAttr "id" u 
+  nid   <- pAttr "nsid" u `mplus` pAttr "id" u
   gname <- pAttr "groupname" u `mplus` (fmap strContent $ findChild (nsName "groupname") u)
-  return 
+  return
      Group{ groupId      = nid
           , groupName    = gname
 	  , groupMembers  = fmap fromIntegral $ eltIntAttr "members" u
 	  , groupIsOnline = fmap fromIntegral $ eltIntAttr "members" u
-	  , groupChatId   = pAttr "chatid" u `mplus` pAttr "chatnsid" u 
+	  , groupChatId   = pAttr "chatid" u `mplus` pAttr "chatnsid" u
 	  , groupInChat   = fmap fromIntegral $ eltIntAttr "inchat" u
 	  }
 
@@ -102,7 +102,7 @@ eltPlaceQuery e = ifNamed "places" e $ do
    let lo = pAttr "longitude" e
    let ac = pAttr "accuracy" e >>= readMb
    t <- pAttr "total" e >>= readMb
-   return 
+   return
     PlaceQuery
       { placeQuery          = qu
       , placeQueryLatitude  = la
@@ -110,7 +110,7 @@ eltPlaceQuery e = ifNamed "places" e $ do
       , placeQueryAccuracy  = ac
       , placeTotal = t
       }
-   
+
 eltPlaces :: Element -> Maybe (PlaceQuery, [Place])
 eltPlaces e = ifNamed "places" e $ do
   q  <- eltPlaceQuery e
@@ -132,7 +132,7 @@ eltPlace e = ifNamed "place" e $ do
   url   <- pAttr "place_url" e
   ty    <- pAttr "place_type" e
   let d = strContent e
-  return Place 
+  return Place
     { placeId = pid
     , placeWOEId = woeid
     , placeLat = lat
@@ -141,7 +141,7 @@ eltPlace e = ifNamed "place" e $ do
     , placeType = ty
     , placeDesc = d
     }
-  
+
 toBlogs :: String -> ErrM [Blog]
 toBlogs s = parseDoc eltBlogsList s
 
@@ -173,10 +173,6 @@ eltPlaceTypeList e = ifNamed "place_types" e $ do
 
 eltPlaceType :: Element -> Maybe PlaceType
 eltPlaceType e = ifNamed "place_type" e $ do
-  bid   <- pAttr "id" e
-  nm    <- pAttr "name" e
-  npwd  <- eltBool "needspassword" e
-  url   <- pAttr "url" e
   return PlaceType
     { placeTypeId   = fromMaybe "" (pAttr "place_type_id" e)
     , placeTypeName = strContent e
@@ -278,7 +274,7 @@ eltItems :: Element -> Maybe [Item]
 eltItems e = ifNamed "items" e $ do
   let ls = pNodes "item" (children e)
   mapM eltItem ls
-  
+
 eltItem :: Element -> Maybe Item
 eltItem e = ifNamed "item" e $ do
   ty     <- pAttr "type" e
@@ -289,7 +285,7 @@ eltItem e = ifNamed "item" e $ do
   sec    <- pAttr "secret" e
   let comold = fromMaybe 0 $ eltIntAttr "commentsold" e
       comnew = fromMaybe 0 $ eltIntAttr "commentsnew" e
-      
+
       com     = fromMaybe 0 $ eltIntAttr "comments" e
   vie    <- eltIntAttr "views" e
   npho   <- eltIntAttr "photos" e
@@ -310,7 +306,7 @@ eltItem e = ifNamed "item" e $ do
      , itViews    = fromIntegral vie
      , itMore     = more
      }
-    
+
 eltActivity :: Element -> Maybe [Activity]
 eltActivity e = do
   let es = pNodes "event" (children e)
@@ -354,8 +350,8 @@ eltContact e = do
     , conIsFamily = fam
     , conIgnored  = ign
     }
-     
-  
+
+
 toPhotoList :: String -> ErrM (PhotoContext, [Photo])
 toPhotoList s = parseDoc eltPhotoList s
 
@@ -370,8 +366,8 @@ eltPhotoList e = ifNamed "photos" e $ do
 
 eltPhotoPair :: Element -> Maybe (Photo, Photo)
 eltPhotoPair e = do
-  f <- findChild (nsName "prevphoto") e >>= eltPhoto 
-  s <- findChild (nsName "nextphoto") e >>= eltPhoto 
+  f <- findChild (nsName "prevphoto") e >>= eltPhoto
+  s <- findChild (nsName "nextphoto") e >>= eltPhoto
   return (f,s)
 
 eltPhoto :: Element -> Maybe Photo
@@ -396,7 +392,7 @@ eltPhoto e = do
      }
 
 eltPhotoContext :: Element -> Maybe PhotoContext
-eltPhotoContext e = 
+eltPhotoContext e =
  return PhotoContext
      { photoCtxtPage    = eltIntAttr "page" e
      , photoCtxtPages   = eltIntAttr "pages" e
@@ -422,9 +418,9 @@ eltCategory e = do
    , catPaths = pts
    , catSubs  = cs
    }
-  
+
 eltGroupCat :: Element -> Maybe GroupCat
-eltGroupCat e 
+eltGroupCat e
  | elName e == nsName "subcat" = eltSubCategory e >>= \ x -> return (SubCat x)
  | elName e == nsName "group"  = eltGroup e  >>= \ x -> return (AGroup x)
  | otherwise = Nothing
@@ -470,7 +466,7 @@ eltPhotosetQuota :: Element -> Maybe PhotosetQuota
 eltPhotosetQuota e = do
   c <- eltIntAttr "created" e
   z <- pAttr "remaining" e
-  let 
+  let
    f = case z of
         "remaining" -> Nothing
 	x -> case reads x of
@@ -549,7 +545,7 @@ eltPhotoDetails e = do
    ts = mapMaybe eltTagDetails (fromMaybe [] $ fmap children $ pNode "tags" es)
    us = mapMaybe eltURLDetails (fromMaybe [] $ fmap children $ pNode "urls" es)
 
-  d   <- pNode "dates" es >>= eltPhotoDate     
+  d   <- pNode "dates" es >>= eltPhotoDate
   return PhotoDetails
      { photoDetailsPhoto       = ph
      , photoDetailsRotation    = rot
@@ -734,7 +730,7 @@ toCommentList :: String -> ErrM [Comment]
 toCommentList s = parseDoc eltCommentList s
 
 eltCommentList :: Element -> Maybe [Comment]
-eltCommentList e = 
+eltCommentList e =
   return $ mapMaybe eltComment $ pNodes "comment" (children e)
 
 eltComment :: Element -> Maybe Comment
@@ -764,7 +760,7 @@ toLicenseList :: String -> ErrM [License]
 toLicenseList s = parseDoc eltLicenseList s
 
 eltLicenseList :: Element -> Maybe [License]
-eltLicenseList e = 
+eltLicenseList e =
   return $ mapMaybe eltLicense $ pNodes "license" (children e)
 
 eltLicense :: Element -> Maybe License
@@ -782,7 +778,7 @@ toTicketList :: String -> ErrM [Ticket]
 toTicketList s = parseDoc eltTicketList s
 
 eltTicketList :: Element -> Maybe [Ticket]
-eltTicketList e = 
+eltTicketList e =
   return $ mapMaybe eltTicket $ pNodes "ticket" (children e)
 
 eltTicket :: Element -> Maybe Ticket
@@ -802,7 +798,7 @@ toClusterList :: String -> ErrM [Cluster]
 toClusterList s = parseDoc eltClusterList s
 
 eltClusterList :: Element -> Maybe [Cluster]
-eltClusterList e = 
+eltClusterList e =
   return $ mapMaybe eltCluster $ pNodes "cluster" (children e)
 
 eltCluster :: Element -> Maybe Cluster
@@ -832,7 +828,7 @@ eltNamespaceList e = ifNamed "namespaces" e $ do
   return (c, ls)
 
 eltResContext :: Element -> Maybe (ResContext a)
-eltResContext e = 
+eltResContext e =
  return ResContext
      { resCtxtPage    = eltIntAttr "page" e
      , resCtxtPages   = eltIntAttr "pages" e

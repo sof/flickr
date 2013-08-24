@@ -21,12 +21,10 @@ import Data.List ( intercalate, sortBy )
 import Util.Post
 
 import Text.XML.Light as XML
-import Text.XML.Light.Proc as XML
 import Flickr.Utils
 import Control.Exception as CE
 import System.FilePath as FilePath ( takeExtension )
 
-import System.IO as IO
 import Data.Typeable
 
 data FM a = FM (FMEnv -> IO a)
@@ -52,7 +50,7 @@ instance Monad FM where
       v <- a env
       case k v of
         (FM b) ->  b env
-    
+
 liftIO :: IO a -> FM a
 liftIO x = FM (\ _ -> x)
 
@@ -60,12 +58,12 @@ flick :: FM a -> IO a
 flick a = flickAPI hsflickrAPIKey a
 
 flickAPI :: APIKey -> FM a -> IO a
-flickAPI ak fm = 
+flickAPI ak fm =
  case (handleFlickr (\ err -> liftIO (print err) >> liftIO (throwIO (toException err)))
                     fm) of
    FM flickr_action_and_stuff -> flickr_action_and_stuff initEnv
  where
-  initEnv = 
+  initEnv =
     FMEnv
       { fm_api_key         = ak
       , fm_is_signed       = False
@@ -182,10 +180,10 @@ flickCall m args = FM $ \ env -> do
   let
      mb _ Nothing = []
      mb x (Just v) = [(x,show v)]
-     
+
      pgContext = fm_is_paged env
-     
-     includeProps ls = 
+
+     includeProps ls =
        maybe ls
              (\ x -> ("include",intercalate "," x):ls)
 	     (fm_include_props env)
@@ -198,12 +196,12 @@ flickCall m args = FM $ \ env -> do
      isSigned xs
       | fm_is_signed env = xs ++ [("api_sig",api_sig)]
       | otherwise = ("format", "rest") : xs
-    
-     withAToken xs 
+
+     withAToken xs
       | fm_is_signed env =
         case fm_auth_token env of
           Nothing -> xs
-	  Just x  -> 
+	  Just x  ->
 	     -- if auth_token is already an arg (cf. flickr.auth.checkToken),
 	     -- don't add a second one. ToDo: issue a warning/heads-up about
 	     -- this ?
@@ -212,30 +210,30 @@ flickCall m args = FM $ \ env -> do
 	      _ -> xs
       | otherwise = xs
 
-     withPerms xs = 
+     withPerms xs =
        case fm_perm_level env of
          Nothing -> xs
-	 Just x  -> 
+	 Just x  ->
 	   case fm_auth_token env of
 	     Just{} -> xs
 	     _     -> ("perms",x):xs
-     
-     withMethod xs = 
+
+     withMethod xs =
        case m of
          "" -> xs
 	 _  -> ("method",m):xs
 
-     withNoFiles xs = 
+     withNoFiles xs =
        filter (\ (_,y) -> case y of { '@':_ -> False; _ -> True }) xs
 
-     api_sig_inp = apiSecret (fm_api_key env) ++ 
+     api_sig_inp = apiSecret (fm_api_key env) ++
                    concatMap (\ (x,y) -> x++y) (
                    sortBy (\ a b -> compare (fst a) (fst b))
-		         (("api_key", apiKey $ fm_api_key env) : 
+		         (("api_key", apiKey $ fm_api_key env) :
 			  withMethod (withAToken (withPerms $ withNoFiles args))))
 
      api_sig = md5sumStr api_sig_inp
-               
+
      restMeth
       | fm_post_method env = restPost
       | otherwise          = restGet
@@ -244,27 +242,27 @@ flickCall m args = FM $ \ env -> do
   restMeth (fromMaybe api_base (fm_api_base env))
            (includeProps $
 	    pageContext  $
-            (withMethod 
-              (("api_key", apiKey $ fm_api_key env) : 
+            (withMethod
+              (("api_key", apiKey $ fm_api_key env) :
 	          isSigned (withAToken $ withPerms args))))
-			  
+
 mkLoginURL :: String -> String -> FM String
 mkLoginURL fr p = FM $ \ env -> do
   return (genLoginURL (apiKey $ fm_api_key env) (apiSecret $ fm_api_key env)
-                      fr p)        
+                      fr p)
 
 genLoginURL :: String
             -> String
 	    -> String
 	    -> String
 	    -> String
-genLoginURL api_key secret frob perm = 
+genLoginURL api_key secret frob perm =
   auth_base ++ "api_key="++api_key ++ "&frob="++frob ++
               "&perms="++perm++"&api_sig="++api_sig
  where
-  api_sig = md5sumStr $ secret ++ 
-                        "api_key" ++ api_key ++ 
-                        "frob" ++ frob ++ 
+  api_sig = md5sumStr $ secret ++
+                        "api_key" ++ api_key ++
+                        "frob" ++ frob ++
                         "perms" ++ perm
 
 restGet :: {-URL-}String -> [(String,String)] -> IO String
@@ -274,7 +272,7 @@ restGet a kv = do
  where
    wArgs [] = ""
    wArgs xs = '?':intercalate "&" (map (\ (k,v) -> k ++ '=':v) xs)
-  
+
 restPost :: {-URL-}String -> [(String,String)] -> IO String
 restPost a kv = do
 --debug:  print (a ++ wArgs kv)
@@ -289,7 +287,7 @@ restPost a kv = do
   postContentsURL (a++vs) hs body
  where
    r0 = newPostRequest "flickr"
-   (r,vs1)  = foldr (\ (x,y) (acc,hs) -> 
+   (r,vs1)  = foldr (\ (x,y) (acc,hs) ->
                   case y of
 		    '@':xs -> (addNameFile x xs (extToTy xs) acc,hs)
 		    _      -> (addNameValue x y acc, hs))
@@ -298,16 +296,16 @@ restPost a kv = do
 
    wArgs [] = ""
    wArgs xs = '?':intercalate "&" (map (\ (k,v) -> k ++ '=':v) xs)
-   
+
     -- ToDo: write/plug into general mime.types-like package here.
-   extToTy fp = 
+   extToTy fp =
      case FilePath.takeExtension fp of
        ""     -> Just "image/jpeg"
        ".gif" -> Just "image/gif"
        ".jpg" -> Just "image/jpeg"
        ".png" -> Just "image/png"
        _      -> Just "image/jpeg"
-  
+
 type ErrM a = Either FlickErr a
 
 data FlickErr
@@ -319,21 +317,21 @@ data FlickErr
      , flickErrorSource :: String
      } deriving Typeable
 
-data SomeFlickException = forall e . Exception e => SomeFlickException e 
-    deriving Typeable 
+data SomeFlickException = forall e . Exception e => SomeFlickException e
+    deriving Typeable
 
-instance Show SomeFlickException where 
-    show (SomeFlickException e) = show e 
+instance Show SomeFlickException where
+    show (SomeFlickException e) = show e
 
-instance Exception SomeFlickException 
+instance Exception SomeFlickException
 
-flickToException :: Exception e => e -> SomeException 
-flickToException = toException . SomeFlickException 
+flickToException :: Exception e => e -> SomeException
+flickToException = toException . SomeFlickException
 
-flickFromException :: Exception e => SomeException -> Maybe e 
-flickFromException x = do 
-    SomeFlickException a <- fromException x 
-    cast a 
+flickFromException :: Exception e => SomeException -> Maybe e
+flickFromException x = do
+    SomeFlickException a <- fromException x
+    cast a
 
 instance Exception FlickErr where
   toException = flickToException
@@ -349,8 +347,8 @@ throwFlickErr :: FlickErr -> FM a
 throwFlickErr e = FM (\ _ -> throwIO e)
 
 catchFlickr :: FM a -> (FlickErr -> FM a) -> FM a
-catchFlickr (FM f) hdlr = FM $ \ env -> 
-  CE.catch (f env) 
+catchFlickr (FM f) hdlr = FM $ \ env ->
+  CE.catch (f env)
            (\ e1 -> case hdlr e1 of { (FM act) -> act env })
 
 instance Show FlickErr where
@@ -365,7 +363,7 @@ instance Show FlickErr where
 	  else []))
 
 flickError :: FlickErr
-flickError 
+flickError
  = FlickErr
      { flickErrorCode   = (-1)
      , flickErrorType   = UnexpectedResponse
@@ -385,7 +383,7 @@ data FlickErrorType
    deriving ( Eq )
 
 instance Show FlickErrorType where
-  show x = 
+  show x =
    case x of
       UnexpectedResponse -> "unexpected XML Flickr response"
       MissingStatus      -> "unexpected response; missing 'rsp' top element"
@@ -397,53 +395,53 @@ instance Show FlickErrorType where
 parseDoc :: (Element -> Maybe a)
          -> String
 	 -> ErrM a
-parseDoc f s = 
+parseDoc f s =
   case checkResponse s of
     Left err -> Left err
     Right x  ->
      case f x of
-        Nothing -> 
+        Nothing ->
          Left flickError{ flickErrorType   = FlickParseError
 	                , flickErrorSource = show (length s) ++ '\n':s
 	   	        }
         Just res -> Right res
 
 checkResponse :: String -> ErrM Element
-checkResponse s = 
+checkResponse s =
   case parseXMLDoc s of
     Nothing -> Left flickError { flickErrorSource = s
                                , flickErrorType   = UnexpectedResponse
 			       }
-    Just e  
+    Just e
      | elName e /= nsName "rsp" -> Left flickError{flickErrorSource=s}
-     | otherwise -> 
+     | otherwise ->
 	  case pAttr "stat" e of
 	    Nothing -> Left flickError{ flickErrorType   = MissingStatus
 	                              , flickErrorSource = s
 				      }
-	    Just "ok" -> 
+	    Just "ok" ->
 	      case elChildren e of
 	        [] -> Right blank_element
 		(x:_) -> Right x
-	    Just "fail" -> 
+	    Just "fail" ->
 	      case findChild (nsName "err") e of
-	        Nothing -> 
+	        Nothing ->
 		  Left flickError{ flickErrorType   = IllformedError
 		                 , flickErrorSource = s
 				 }
-		Just e1 -> 
+		Just e1 ->
 		  case pAttr "code" e1 of
-		    Nothing -> 
+		    Nothing ->
 		      Left flickError{ flickErrorSource = s
 		                     , flickErrorType   = IllformedError
 				     }
-		    Just v_str  -> 
+		    Just v_str  ->
 		      case reads v_str of
-		       ((v,_):_) -> Left 
+		       ((v,_):_) -> Left
 		          flickError { flickErrorType = FlickrAPIError
 			             , flickErrorCode = v
 				     , flickErrorSource = s
-				     , flickErrorMsg  = 
+				     , flickErrorMsg  =
 				         fromMaybe "" (pAttr "msg" e1)
 			             }
                        _ -> Left flickError{ flickErrorSource = s

@@ -17,7 +17,6 @@ module Flickr.Utils
        ) where
 
 import Text.XML.Light as XML
-import Text.XML.Light.Proc as XML
 import Data.Maybe
 import Data.List
 import Control.Monad
@@ -43,7 +42,7 @@ children     :: XML.Element -> [XML.Element]
 children e    = onlyElems (elContent e)
 
 child :: XML.Element -> XML.Element
-child e = 
+child e =
   case children e of
     [] -> error ("child: empty content " ++ show e)
     (x:_) -> x
@@ -90,7 +89,7 @@ showBool :: Bool -> String
 showBool x = show (fromEnum x)
 
 intContent :: Element -> Maybe Int
-intContent e = 
+intContent e =
   case reads (strContent e) of
     ((v,_):_) -> Just v
     _ -> Nothing
