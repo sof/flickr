@@ -1,0 +1,605 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--Rendered using the Haskell Html Library v0.2-->
+<HTML
+><HEAD
+><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"
+><TITLE
+>flickr-0.3.0: Haskell binding to the Flickr API</TITLE
+><LINK HREF="haddock.css" REL="stylesheet" TYPE="text/css"
+><SCRIPT SRC="haddock-util.js" TYPE="text/javascript"
+></SCRIPT
+></HEAD
+><BODY
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="topbar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><IMG SRC="haskell_icon.gif" WIDTH="16" HEIGHT="16" ALT=" "
+></TD
+><TD CLASS="title"
+>flickr-0.3.0: Haskell binding to the Flickr API</TD
+><TD CLASS="topbut"
+><A HREF="flickr.html"
+>Contents</A
+></TD
+><TD CLASS="topbut"
+><A HREF="flickr-doc-index.html"
+>Index</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>flickr-0.3.0: Haskell binding to the Flickr API</TD
+></TR
+><TR
+><TD CLASS="doc"
+>The flickr API binding lets you access flickr.com's
+resources and methods from Haskell.
+Implements the full API, as specified by <A HREF="http://flickr.com/services/api/"
+>http://flickr.com/services/api/</A
+>
+<p>
+The binding is functionally complete (Nov 2008), letting
+you write applications in Haskell that access and manipulates
+content on Flickr, either public information or per-user
+photos and properties. Including the uploading of new photos.
+</p>
+<p>
+<h2>Getting started</h2>
+
+<p>
+For some code samples showing you how to get started using this
+API binding, have a look in the examples/ directory. 
+</p>
+
+<h2>Building and installing</h2>
+
+<p>
+This package is provided in Cabal form, so only thing you need to
+do to get going is:
+</p>
+
+<pre>
+  foo% runghc Setup configure
+  foo% runghc Setup build 
+  foo% runghc Setup install
+</pre>
+
+<p>
+The package depends on a bunch of other packages though, so you
+need to have them built&installed, as well. They are:
+</p>
+<ul>
+<li>HTTP: <a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/HTTP">http://hackage.haskell.org/cgi-bin/hackage-scripts/package/HTTP</a></li>
+<li>xml:  <a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/xml">http://hackage.haskell.org/cgi-bin/hackage-scripts/package/xml</a></li>
+<li>mime >= 0.3: <a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/mime">http://hackage.haskell.org/cgi-bin/hackage-scripts/package/mime</a></li>
+<li>utf8-string: <a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/utf8-string">http://hackage.haskell.org/cgi-bin/hackage-scripts/package/utf8-string</a></li>
+
+</ul>
+
+<h2>Authentication</h2>
+
+<p>
+To use this API binding to build your own Flickr application, you ought
+to apply for your own set of API keys to identify yourself with when
+prompting the user. See, http://www.flickr.com/services/api/keys/apply/ , 
+for how to apply -- use either a 'mobile' or 'web' type of key. With
+that API key, instantiate your own APIKey value, see Util.Keys for
+definition of that type + examples of its use. 
+</p>
+
+<p>
+(The keys that come with the package by default are not guaranteed to
+stick around for too long, esp. if their use end up being used in inapprop.
+ways.)
+</p>
+
+<h2>Feedback / question</h2>
+
+<p>
+
+Please send them to sof@forkIO.com , and I'll try to respond to them
+as best/quickly as possible.
+</p>
+</TD
+></TR
+><TR
+><TD CLASS="section1"
+>Modules</TD
+></TR
+><TR
+><TD
+><TABLE CLASS="vanilla2" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD STYLE="width: 50em"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'n:0')" ALT="show/hide"
+>Codec</TD
+><TD
+></TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding: 0; padding-left: 2em" COLSPAN="3"
+><TABLE CLASS="vanilla2" CELLSPACING="0" CELLPADDING="0" ID="n:0" STYLE="display:block;"
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Codec-Percent.html"
+>Codec.Percent</A
+></TD
+><TD
+></TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Codec-URLEncoder.html"
+>Codec.URLEncoder</A
+></TD
+><TD
+></TD
+><TD
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD STYLE="width: 50em"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'n:1')" ALT="show/hide"
+>Flickr</TD
+><TD
+></TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding: 0; padding-left: 2em" COLSPAN="3"
+><TABLE CLASS="vanilla2" CELLSPACING="0" CELLPADDING="0" ID="n:1" STYLE="display:block;"
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-API.html"
+>Flickr.API</A
+></TD
+><TD
+></TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-Activity.html"
+>Flickr.Activity</A
+></TD
+><TD CLASS="rdoc"
+>flickr.activity - photo comments and activity.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-Auth.html"
+>Flickr.Auth</A
+></TD
+><TD CLASS="rdoc"
+>flickr.auth - authentication, flickr-style.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-Blogs.html"
+>Flickr.Blogs</A
+></TD
+><TD CLASS="rdoc"
+>flickr.blogs - post to photo blog.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-Contacts.html"
+>Flickr.Contacts</A
+></TD
+><TD CLASS="rdoc"
+>flickr.contacts - fetch user's contact list.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-Favorites.html"
+>Flickr.Favorites</A
+></TD
+><TD CLASS="rdoc"
+>flickr.favorites - manage favorite photos.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="width: 48em"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'n:2')" ALT="show/hide"
+><A HREF="Flickr-Groups.html"
+>Flickr.Groups</A
+></TD
+><TD CLASS="rdoc"
+>flickr.groups - search and browse groups/categories.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding: 0; padding-left: 2em" COLSPAN="3"
+><TABLE CLASS="vanilla2" CELLSPACING="0" CELLPADDING="0" ID="n:2" STYLE="display:block;"
+><TR
+><TD STYLE="padding-left: 1.25em;width: 46em"
+><A HREF="Flickr-Groups-Pools.html"
+>Flickr.Groups.Pools</A
+></TD
+><TD CLASS="rdoc"
+>flickr.groups.pools - manage photo group pooling.
+</TD
+><TD
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-Interestingness.html"
+>Flickr.Interestingness</A
+></TD
+><TD CLASS="rdoc"
+>fetch ranked photos by Flickr interest level.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-MachineTags.html"
+>Flickr.MachineTags</A
+></TD
+><TD CLASS="rdoc"
+>flickr.machinetags - fetch photos by triple (ns,pred,val) tags.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-Monad.html"
+>Flickr.Monad</A
+></TD
+><TD CLASS="rdoc"
+>Monadic layer for supporting flickr.com interactions.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-People.html"
+>Flickr.People</A
+></TD
+><TD CLASS="rdoc"
+>flickr.people - access a user's attributes etc.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="width: 48em"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'n:3')" ALT="show/hide"
+><A HREF="Flickr-Photos.html"
+>Flickr.Photos</A
+></TD
+><TD CLASS="rdoc"
+>flickr.photos - manage and access user photos.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding: 0; padding-left: 2em" COLSPAN="3"
+><TABLE CLASS="vanilla2" CELLSPACING="0" CELLPADDING="0" ID="n:3" STYLE="display:block;"
+><TR
+><TD STYLE="padding-left: 1.25em;width: 46em"
+><A HREF="Flickr-Photos-Comments.html"
+>Flickr.Photos.Comments</A
+></TD
+><TD CLASS="rdoc"
+>flickr.photos.comments - setting/getting photo comments.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 46em"
+><A HREF="Flickr-Photos-Geo.html"
+>Flickr.Photos.Geo</A
+></TD
+><TD CLASS="rdoc"
+>flickr.photos.geo - setting/getting photo geo location.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 46em"
+><A HREF="Flickr-Photos-Licenses.html"
+>Flickr.Photos.Licenses</A
+></TD
+><TD CLASS="rdoc"
+>flickr.photos.licenses - setting/getting photo licensing.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 46em"
+><A HREF="Flickr-Photos-Notes.html"
+>Flickr.Photos.Notes</A
+></TD
+><TD CLASS="rdoc"
+>flickr.photos.notes - manage photo annotations.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 46em"
+><A HREF="Flickr-Photos-Transform.html"
+>Flickr.Photos.Transform</A
+></TD
+><TD CLASS="rdoc"
+>flickr.photos.transform - rotation, mostly.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 46em"
+><A HREF="Flickr-Photos-Upload.html"
+>Flickr.Photos.Upload</A
+></TD
+><TD CLASS="rdoc"
+>flickr.photos.upload - check upload status.
+</TD
+><TD
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD STYLE="width: 48em"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'n:4')" ALT="show/hide"
+><A HREF="Flickr-Photosets.html"
+>Flickr.Photosets</A
+></TD
+><TD CLASS="rdoc"
+>flickr.photosets - navigating and managing sets.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding: 0; padding-left: 2em" COLSPAN="3"
+><TABLE CLASS="vanilla2" CELLSPACING="0" CELLPADDING="0" ID="n:4" STYLE="display:block;"
+><TR
+><TD STYLE="padding-left: 1.25em;width: 46em"
+><A HREF="Flickr-Photosets-Comments.html"
+>Flickr.Photosets.Comments</A
+></TD
+><TD CLASS="rdoc"
+>flickr.photosets.comments - manage comments on photo sets.
+</TD
+><TD
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-Places.html"
+>Flickr.Places</A
+></TD
+><TD CLASS="rdoc"
+>flickr.places - geo locating photos.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-Prefs.html"
+>Flickr.Prefs</A
+></TD
+><TD CLASS="rdoc"
+>flickr.prefs - accessing user preferences.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-Tags.html"
+>Flickr.Tags</A
+></TD
+><TD CLASS="rdoc"
+>flickr.tags - fetch photos by tag or cluster membership.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-Test.html"
+>Flickr.Test</A
+></TD
+><TD CLASS="rdoc"
+>flickr.test - testing auth and method calls.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="width: 48em"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'n:5')" ALT="show/hide"
+><A HREF="Flickr-Types.html"
+>Flickr.Types</A
+></TD
+><TD CLASS="rdoc"
+>Collection of Haskell types for Flickr
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding: 0; padding-left: 2em" COLSPAN="3"
+><TABLE CLASS="vanilla2" CELLSPACING="0" CELLPADDING="0" ID="n:5" STYLE="display:block;"
+><TR
+><TD STYLE="padding-left: 1.25em;width: 46em"
+><A HREF="Flickr-Types-Import.html"
+>Flickr.Types.Import</A
+></TD
+><TD CLASS="rdoc"
+>Parsing Flickr API responses.
+</TD
+><TD
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-URLs.html"
+>Flickr.URLs</A
+></TD
+><TD CLASS="rdoc"
+>flickr.urls - locate user photos and groups.
+</TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Flickr-Utils.html"
+>Flickr.Utils</A
+></TD
+><TD CLASS="rdoc"
+>assorted functions for unravelling Flickr responses.
+</TD
+><TD
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD STYLE="width: 50em"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'n:6')" ALT="show/hide"
+>Util</TD
+><TD
+></TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding: 0; padding-left: 2em" COLSPAN="3"
+><TABLE CLASS="vanilla2" CELLSPACING="0" CELLPADDING="0" ID="n:6" STYLE="display:block;"
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Util-Authenticate.html"
+>Util.Authenticate</A
+></TD
+><TD
+></TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Util-Fetch.html"
+>Util.Fetch</A
+></TD
+><TD
+></TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Util-Keys.html"
+>Util.Keys</A
+></TD
+><TD
+></TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Util-MD5.html"
+>Util.MD5</A
+></TD
+><TD
+></TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Util-MIME.html"
+>Util.MIME</A
+></TD
+><TD
+></TD
+><TD
+></TD
+></TR
+><TR
+><TD STYLE="padding-left: 1.25em;width: 48em"
+><A HREF="Util-Post.html"
+>Util.Post</A
+></TD
+><TD
+></TD
+><TD
+></TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="botbar"
+>Produced by <A HREF="http://www.haskell.org/haddock/"
+>Haddock</A
+> version 2.2.2</TD
+></TR
+></TABLE
+></BODY
+></HTML
+>
