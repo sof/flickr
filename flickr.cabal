@@ -1,5 +1,5 @@
 name: flickr
-version: 0.3.3
+version: 0.3.4
 Synopsis: Haskell binding to the Flickr API
 Description:
    The flickr API binding lets you access flickr.com's
@@ -63,7 +63,7 @@ library
 -- Extra-libraries: curl, xml, HTTP, network
  Ghc-Options:     -Wall
 
- build-depends: base >= 4, HTTP, network, xml, mime >= 0.3, random, utf8-string, filepath
+ build-depends: base >= 4, HTTP, network, xml, mime < 0.4 && >= 0.3, random, utf8-string, filepath
 
 executable showPublic {
   main-is:              examples/ShowPublicPhotos.hs
